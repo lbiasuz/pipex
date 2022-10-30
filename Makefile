@@ -6,7 +6,7 @@
 #    By: lbiasuz <lbiasuz@student.42sp.org.br>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/08 22:16:36 by lbiasuz           #+#    #+#              #
-#    Updated: 2022/10/09 11:21:10 by lbiasuz          ###   ########.fr        #
+#    Updated: 2022/10/29 19:42:47 by lbiasuz          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,3 +37,10 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
+
+teste:
+	$(CC) $(OPTIONS) teste.c $(DEPENDENCIES) -o teste
+
+ret:
+	rm -rf teste
+	make teste
