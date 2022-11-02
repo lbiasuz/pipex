@@ -6,7 +6,7 @@
 /*   By: lbiasuz <lbiasuz@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 11:20:09 by lbiasuz           #+#    #+#             */
-/*   Updated: 2022/10/30 00:28:53 by lbiasuz          ###   ########.fr       */
+/*   Updated: 2022/11/02 00:32:43 by lbiasuz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,43 @@ void	execute_comand(char *argument)
 	i = execve(compath, comargs, NULL);
 	if (i)
 		perror(strerror(i));
+	i = 0;
 	while (comargs[i++])
 		free(comargs[i]);
 	free(comargs);
+	free(compath);
 }
 
 int	main(int argc, char *argv[])
 {
 	int	pid[2];
 	int pfd[2];
-	
+
 	pipe(pfd);
 	pid[0] = fork();
 	if (pid[0] == 0)
 	{
-		sleep(5);
+		close(pfd[0]);
 		init_stdin(argv[1]);
-		execute_comand(argv[2]);
+		if (argv[2])
+			execute_comand(argv[2]);
+		dup2(pfd[1], STDOUT_FILENO);
+		close(pfd[1]);
 		exit(0);
 	}
-	waitpid(0, &pid[1], WNOHANG);
-	ft_printf("Process waited \n");
+	else
+	{
+		pid[0] = waitpid(0, &pid[1], WUNTRACED);
+		if (pid[0] != -1)
+		{
+			close(pfd[1]);
+			dup2(pfd[0], STDIN_FILENO);
+			execute_comand(argv[3]);
+			close(pfd[0]);
+			exit(0);
+		}
+		else
+			ft_printf("Wait failed\n");
+	}
 	return (argc);
 }
