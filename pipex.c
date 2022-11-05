@@ -6,7 +6,7 @@
 /*   By: lbiasuz <lbiasuz@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 11:20:09 by lbiasuz           #+#    #+#             */
-/*   Updated: 2022/11/03 23:10:15 by lbiasuz          ###   ########.fr       */
+/*   Updated: 2022/11/05 17:10:59 by lbiasuz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	dest_stdout(char *filepath)
 {
 	int fd;
 	fd = open(filepath, O_WRONLY | O_TRUNC);
-	dup2(STDOUT_FILENO, fd);
+	dup2(fd, STDOUT_FILENO);
 	close(fd);
 }
 
@@ -69,10 +69,9 @@ int	main(int argc, char *argv[])
 	{
 		close(pfd[1]);
 		dup2(pfd[0], STDIN_FILENO);
-		execute_comand(argv[3]);
 		dest_stdout(argv[4]);
+		execute_comand(argv[3]);
 		close(pfd[0]);
-
 	}
 	return (argc);
 }
