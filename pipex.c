@@ -6,7 +6,7 @@
 /*   By: lbiasuz <lbiasuz@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 11:20:09 by lbiasuz           #+#    #+#             */
-/*   Updated: 2022/11/08 23:20:55 by lbiasuz          ###   ########.fr       */
+/*   Updated: 2022/11/08 23:40:36 by lbiasuz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	execute_comand(char *argument)
 	compath = ft_strjoin("/bin/", comargs[0]);
 	i = 0;
 	i = execve(compath, comargs, NULL);
-	if (i)
+	if (i == -1)
 		perror(strerror(i));
 	i = 0;
 	while (comargs[i++])

@@ -6,7 +6,7 @@
 /*   By: lbiasuz <lbiasuz@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 23:20:00 by lbiasuz           #+#    #+#             */
-/*   Updated: 2022/11/08 23:21:00 by lbiasuz          ###   ########.fr       */
+/*   Updated: 2022/11/08 23:40:48 by lbiasuz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,5 @@ void	dest_stdout(char *filepath)
 int	error(const char *str)
 {
 	perror(str);
-	return (-1);
+	return (1);
 }
