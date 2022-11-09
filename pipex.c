@@ -6,28 +6,11 @@
 /*   By: lbiasuz <lbiasuz@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 11:20:09 by lbiasuz           #+#    #+#             */
-/*   Updated: 2022/11/05 17:10:59 by lbiasuz          ###   ########.fr       */
+/*   Updated: 2022/11/08 23:20:55 by lbiasuz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-void	init_stdin(char *filepath)
-{
-	int fd;
-
-	fd = open(filepath, O_RDONLY);
-	dup2(fd, STDIN_FILENO);
-	close(fd);
-}
-
-void	dest_stdout(char *filepath)
-{
-	int fd;
-	fd = open(filepath, O_WRONLY | O_TRUNC);
-	dup2(fd, STDOUT_FILENO);
-	close(fd);
-}
 
 void	execute_comand(char *argument)
 {
@@ -51,17 +34,20 @@ void	execute_comand(char *argument)
 int	main(int argc, char *argv[])
 {
 	int	pid[2];
-	int pfd[2];
+	int	pfd[2];
 
 	pipe(pfd);
+	if (argc < 5)
+		return (error("Sem argumentos o suficiente"));
 	pid[0] = fork();
+	if (pid[0] == -1)
+		return (error("Falha no fork"));
 	if (pid[0] == 0)
 	{
 		close(pfd[0]);
 		init_stdin(argv[1]);
 		dup2(pfd[1], STDOUT_FILENO);
-		if (argv[2])
-			execute_comand(argv[2]);
+		execute_comand(argv[2]);
 		close(pfd[1]);
 		exit(0);
 	}
@@ -73,5 +59,5 @@ int	main(int argc, char *argv[])
 		execute_comand(argv[3]);
 		close(pfd[0]);
 	}
-	return (argc);
+	return (0);
 }

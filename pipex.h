@@ -6,7 +6,7 @@
 /*   By: lbiasuz <lbiasuz@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 11:20:46 by lbiasuz           #+#    #+#             */
-/*   Updated: 2022/10/30 00:25:09 by lbiasuz          ###   ########.fr       */
+/*   Updated: 2022/11/08 23:23:45 by lbiasuz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,12 @@
 # include "libft/ft_printf.h"
 # include "libft/get_next_line.h"
 
-int	main(int argc, char *argv[]);
+# define BIN_PATH "/bin/"
 
+int		main(int argc, char *argv[]);
+void	init_stdin(char *filepath);
+void	dest_stdout(char *filepath);
+int		error(const char *str);
+void	execute_comand(char *argument);
 
 #endif

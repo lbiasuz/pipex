@@ -6,7 +6,7 @@
 #    By: lbiasuz <lbiasuz@student.42sp.org.br>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/08 22:16:36 by lbiasuz           #+#    #+#              #
-#    Updated: 2022/10/30 12:16:44 by lbiasuz          ###   ########.fr        #
+#    Updated: 2022/11/08 23:21:52 by lbiasuz          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ OPTIONS				=	-Wall -Werror -Wextra -g3
 
 NAME					=	pipex
 
-SRC						= pipex.c
+SRC						= pipex.c pipex_utils.c
 
 DEPENDENCIES	=	libft.a
 
