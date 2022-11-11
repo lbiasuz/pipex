@@ -6,32 +6,34 @@
 /*   By: lbiasuz <lbiasuz@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 11:20:09 by lbiasuz           #+#    #+#             */
-/*   Updated: 2022/11/08 23:40:36 by lbiasuz          ###   ########.fr       */
+/*   Updated: 2022/11/10 00:31:02 by lbiasuz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	execute_comand(char *argument)
+void	execute_comand(char *argument, char **envp)
 {
 	int		i;
+	int		errn;
 	char	*compath;
 	char	**comargs;
-
+	
 	comargs = ft_split(argument, ' ');
 	compath = ft_strjoin("/bin/", comargs[0]);
-	i = 0;
-	i = execve(compath, comargs, NULL);
-	if (i == -1)
-		perror(strerror(i));
+	errn = execve(compath, comargs, envp);
+	if (errn == -1)
+		perror("Failed to execute command");
 	i = 0;
 	while (comargs[i++])
 		free(comargs[i]);
 	free(comargs);
 	free(compath);
+	if (errn == -1)
+		exit(EXIT_FAILURE);
 }
 
-int	main(int argc, char *argv[])
+int	main(int argc, char *argv[], char **envp)
 {
 	int	pid[2];
 	int	pfd[2];
@@ -47,17 +49,15 @@ int	main(int argc, char *argv[])
 		close(pfd[0]);
 		init_stdin(argv[1]);
 		dup2(pfd[1], STDOUT_FILENO);
-		execute_comand(argv[2]);
-		close(pfd[1]);
-		exit(0);
+		execute_comand(argv[2], envp);
+		exit(EXIT_SUCCESS);
 	}
 	else
 	{
 		close(pfd[1]);
 		dup2(pfd[0], STDIN_FILENO);
 		dest_stdout(argv[4]);
-		execute_comand(argv[3]);
-		close(pfd[0]);
+		execute_comand(argv[3], envp);
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }

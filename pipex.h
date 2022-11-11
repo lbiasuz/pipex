@@ -6,7 +6,7 @@
 /*   By: lbiasuz <lbiasuz@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 11:20:46 by lbiasuz           #+#    #+#             */
-/*   Updated: 2022/11/08 23:23:45 by lbiasuz          ###   ########.fr       */
+/*   Updated: 2022/11/10 00:21:51 by lbiasuz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@
 
 # define BIN_PATH "/bin/"
 
-int		main(int argc, char *argv[]);
+int		main(int argc, char *argv[], char **envp);
 void	init_stdin(char *filepath);
 void	dest_stdout(char *filepath);
 int		error(const char *str);
-void	execute_comand(char *argument);
+void	execute_comand(char *argument, char **envp);
 
 #endif
