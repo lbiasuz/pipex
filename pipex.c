@@ -12,28 +12,30 @@
 
 #include "pipex.h"
 
-void	execute_comand(char *argument, char **envp)
+void	execute_comand(char *argument, char *env[])
 {
 	int		i;
-	int		errn;
 	char	*compath;
 	char	**comargs;
 	
 	comargs = ft_split(argument, ' ');
-	compath = ft_strjoin("/bin/", comargs[0]);
-	errn = execve(compath, comargs, envp);
-	if (errn == -1)
-		perror("Failed to execute command");
+	if (!ft_strchr(comargs[0], '/'))
+		compath = ft_strjoin("/bin/", comargs[0]);
+	else
+		compath = ft_strjoin("", comargs[0]);
+	if (execve(compath, comargs, env) == -1)
+		perror(strerror(errno));
 	i = 0;
-	while (comargs[i++])
+	while (comargs[i] != NULL && *comargs[i] != '\0')
+	{
 		free(comargs[i]);
+		i++;
+	}
 	free(comargs);
 	free(compath);
-	if (errn == -1)
-		exit(EXIT_FAILURE);
 }
 
-int	main(int argc, char *argv[], char **envp)
+int	main(int argc, char *argv[], char *envp[])
 {
 	int	pid[2];
 	int	pfd[2];
@@ -50,14 +52,15 @@ int	main(int argc, char *argv[], char **envp)
 		init_stdin(argv[1]);
 		dup2(pfd[1], STDOUT_FILENO);
 		execute_comand(argv[2], envp);
-		exit(EXIT_SUCCESS);
+		exit(errno);
 	}
 	else
 	{
+		waitpid(0, &pid[1], WEXITED);
 		close(pfd[1]);
 		dup2(pfd[0], STDIN_FILENO);
 		dest_stdout(argv[4]);
 		execute_comand(argv[3], envp);
 	}
-	return (EXIT_SUCCESS);
+	return(errno);
 }

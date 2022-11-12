@@ -13,6 +13,7 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 # include <fcntl.h>
+# include <errno.h>
 # include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -25,10 +26,10 @@
 
 # define BIN_PATH "/bin/"
 
-int		main(int argc, char *argv[], char **envp);
+int		main(int argc, char *argv[], char *env[]);
 void	init_stdin(char *filepath);
 void	dest_stdout(char *filepath);
 int		error(const char *str);
-void	execute_comand(char *argument, char **envp);
+void	execute_comand(char *argument, char *env[]);
 
 #endif

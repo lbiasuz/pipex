@@ -23,13 +23,13 @@ void	init_stdin(char *filepath)
 void	dest_stdout(char *filepath)
 {
 	int	fd;
-
-	fd = open(filepath, O_WRONLY | O_CLOEXEC);
+	
+	fd = open(filepath, O_WRONLY | O_CLOEXEC | O_CREAT | O_TRUNC, 0777);
 	dup2(fd, STDOUT_FILENO);
 }
 
 int	error(const char *str)
 {
 	perror(str);
-	return (1);
+	return (EXIT_FAILURE);
 }
