@@ -16,20 +16,30 @@ void	init_stdin(char *filepath)
 {
 	int	fd;
 
-	fd = open(filepath, O_RDONLY | O_CLOEXEC);
+	fd = open(filepath, O_RDONLY, 0777);
+	if (fd == -1)
+	{
+		perror("Arquivo não encontrado");
+		exit(errno);
+	}
 	dup2(fd, STDIN_FILENO);
 }
 
 void	dest_stdout(char *filepath)
 {
 	int	fd;
-	
-	fd = open(filepath, O_WRONLY | O_CLOEXEC | O_CREAT | O_TRUNC, 0777);
+
+	fd = open(filepath, O_WRONLY | O_TRUNC, 0777);
+	if (fd == -1)
+	{
+		perror("Arquivo não encontrado");
+		exit(errno);
+	}
 	dup2(fd, STDOUT_FILENO);
 }
 
 int	error(const char *str)
 {
 	perror(str);
-	return (EXIT_FAILURE);
+	return (errno);
 }
