@@ -6,7 +6,7 @@
 /*   By: lbiasuz <lbiasuz@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 23:20:00 by lbiasuz           #+#    #+#             */
-/*   Updated: 2022/11/10 00:34:55 by lbiasuz          ###   ########.fr       */
+/*   Updated: 2022/11/14 05:37:29 by lbiasuz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,12 @@ char	**args_list(char *args_str, int i)
 	while (args_str[i])
 	{
 		if (args_str[i] == ' ')
-			args_str[i] = 144;
+			args_str[i] = -1;
 		if (args_str[i] == 39 && ft_strchr_gnl(&args_str[i + 1], 39) != -1)
 			i += ft_strchr_gnl(&args_str[i + 1], 39);
 		i++;
 	}
-	return (ft_split(args_str, 144));
+	return (ft_split(args_str, -1));
 }
 
 char	*env_path(char *envp[])
