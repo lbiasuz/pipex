@@ -12,18 +12,6 @@
 
 #include "pipex.h"
 
-char	*env_path(char *envp[])
-{
-	int	i;
-
-	i = 0;
-	while (!ft_strnstr(envp[i], "PATH=", 5))
-		i++;
-	if (envp[i])
-		return (ft_strchr(envp[i], '=') + 1);
-	return (NULL);
-}
-
 char	*command_path(char *envp[], char *command)
 {
 	char	**paths;
@@ -35,7 +23,7 @@ char	*command_path(char *envp[], char *command)
 	while (paths[i])
 	{
 		temp = ft_strjoin(paths[i], command);
-		if (access(temp, F_OK) != -1)
+		if (access(temp, X_OK) != -1)
 			break ;
 		free(temp);
 		i++;
@@ -56,23 +44,40 @@ void	execute_comand(char *argument, char *envp[])
 	char	*compath;
 	char	**comargs;
 
-	comargs = ft_split(argument, ' ');
+	i = 0;
+	comargs = args_list(argument, 0);
 	if (comargs[0][0] != '/')
 		compath = command_path(envp, ft_strjoin("/", comargs[0]));
 	else
 		compath = ft_strjoin("", comargs[0]);
 	if (!compath)
-		perror("command not found");
+		error("command not found", 127);
 	else if (execve(compath, comargs, envp) == -1)
 		perror(strerror(errno));
-	i = 0;
 	while (comargs[i] != NULL && *comargs[i] != '\0')
-	{
-		free(comargs[i]);
-		i++;
-	}
+		free(comargs[i++]);
 	free(comargs);
+	if (!compath)
+		exit(127);
 	free(compath);
+}
+
+void	child(int pfd[2], char **argv, char **envp)
+{
+	close(pfd[0]);
+	init_stdin(argv[1]);
+	dup2(pfd[1], STDOUT_FILENO);
+	execute_comand(argv[2], envp);
+	exit(errno);
+}
+
+void	father(int pfd[2], int pid[2], char **argv, char **envp)
+{
+	waitpid(0, &pid[1], WEXITED);
+	close(pfd[1]);
+	dup2(pfd[0], STDIN_FILENO);
+	dest_stdout(argv[4]);
+	execute_comand(argv[3], envp);
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -81,27 +86,15 @@ int	main(int argc, char *argv[], char *envp[])
 	int	pfd[2];
 
 	if (argc < 5)
-		return (error("Sem argumentos o suficiente"));
+		return (error("Sem argumentos o suficiente", 1));
 	if (pipe(pfd) == -1)
-		return (error("Falha no pipe"));
+		return (error("Falha no pipe", 1));
 	pid[0] = fork();
 	if (pid[0] == -1)
-		return (error("Falha no fork"));
+		return (error("Falha no fork", 1));
 	if (pid[0] == 0)
-	{
-		close(pfd[0]);
-		init_stdin(argv[1]);
-		dup2(pfd[1], STDOUT_FILENO);
-		execute_comand(argv[2], envp);
-		exit(errno);
-	}
+		child(pfd, argv, envp);
 	else
-	{
-		waitpid(0, &pid[1], WEXITED);
-		close(pfd[1]);
-		dup2(pfd[0], STDIN_FILENO);
-		dest_stdout(argv[4]);
-		execute_comand(argv[3], envp);
-	}
+		father(pfd, pid, argv, envp);
 	return (errno);
 }

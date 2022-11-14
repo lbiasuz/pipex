@@ -29,7 +29,12 @@
 int		main(int argc, char *argv[], char *env[]);
 void	init_stdin(char *filepath);
 void	dest_stdout(char *filepath);
-int		error(const char *str);
+char	**args_list(char *args_str, int i);
+char	*env_path(char *envp[]);
+int		error(const char *str, int err);
+char	*command_path(char *envp[], char *command);
 void	execute_comand(char *argument, char *env[]);
+void	child(int pfd[2], char **argv, char **envp);
+void	father(int pfd[2], int pid[2], char **argv, char **envp);
 
 #endif

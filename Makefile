@@ -38,13 +38,4 @@ fclean: clean
 
 re: fclean all
 
-rep:
-	rm -rf pipex
-	make all
-
-teste:
-	$(CC) $(OPTIONS) teste.c $(DEPENDENCIES) -o teste
-
-ret:
-	rm -rf teste
-	make teste
+.PHONY = all clean fclean re $(NAME)
